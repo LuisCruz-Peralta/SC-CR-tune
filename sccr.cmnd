@@ -1,0 +1,76 @@
+! This file will generate inelastic events primarily to compare with ALICE data
+! Command file for pp collision to study charm hadrons production
+! Note that for the various output functionalities to work,
+! HepMC, YODA, RIVET and ROOT respectively needs to either
+! be installed to system path, or appended before compiling.
+
+! 1) Settings related to the physics processes generated. Here
+! a simple pp soft QCD run at 7 TeV.
+Beams:idA = 2212        ! first beam p = 2212
+Beams:idB = 2212        ! second beam p = 2212
+Beams:eCM = 13000       ! CM energy of collision
+
+SoftQCD:all = off        ! All soft QCD processes are on
+SoftQCD:inelastic = on   ! All soft QCD except elastic
+
+! 2) Settings related to the run
+Main:numberOfEvents = 100000          ! number of events to generate
+Main:timesAllowErrors = 100000          ! abort run after this many flawed events
+
+Init:showChangedSettings = on      ! list changed settings
+Next:numberCount = 500            ! print message every n events
+Next:numberShowLHA = 1             ! print LHA information n times
+Next:numberShowInfo = 1            ! print event information n times
+Next:numberShowProcess = 1         ! print process record n times
+Next:numberShowEvent = 1           ! print event record n times
+Stat:showPartonLevel = on          ! additional statistics on MPI
+
+! 3) SC-CR setting
+
+# Settings related to colour reconnection QCDCR + spatial constraint
+PartonVertex:setVertex = on
+ColourReconnection:mode = 1
+ColourReconnection:timeDilationMode = 0
+ColourReconnection:allowDoubleJunRem = off
+ColourReconnection:allowJunctions = on
+ColourReconnection:lambdaForm = 1
+
+# changes introduced in QCDCR for spatial constraint in CR
+ColourReconnection:m0 = 1.05
+ColourReconnection:mPseudo = 1.05
+ColourReconnection:junctionCorrection = 1.37
+ColourReconnection:dipoleMaxDist = 0.5
+MultipartonInteractions:pT0Ref = 2.37
+
+StringPT:sigma = 0.335
+StringZ:aLund = 0.36
+StringZ:bLund = 0.56
+StringFlav:probQQtoQ = 0.078
+StringFlav:probStoUD = 0.4               !increase strangeness to compansate for not using ropes
+StringFlav:probQQ1toQQ0join = 0.5,0.7,0.9,1.0
+BeamRemnants:remnantMode = 1
+BeamRemnants:saturation = 5
+BeamRemnants:beamJunction = on
+
+# Allow additional trial for failed string fragmentation
+MiniStringFragmentation:tryAfterFailedFrag = on
+
+# Changes related to heavy quarks lambda measure + junction fragmentation
+ColourReconnection:heavyLambdaForm = 1         ! only modifies lambda for junctions
+StringFragmentation:pearlFragmentation = on    ! allows fragmentation in heavy-quark rest frame
+                                                !I think!
+
+# Slightly changed c-mass, will increase the charm cross section
+
+4:m0 = 1.3           ! set charm mass
+5:m0 = 4.2           ! set bottom mass
+
+! 4) Other settings. Can be expanded as desired.
+! Note: may overwrite some of the values above, so watch out.
+ParticleDecays:limitTau0 = on      ! set long-lived particle stable ...
+ParticleDecays:tau0Max = 10        ! ... if c*tau0 > 10 mm
+
+Random:Setseed = on
+Random:seed = 1
+#En acarus debe de ser
+#Random:seed = -2
